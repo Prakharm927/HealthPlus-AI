@@ -1,0 +1,9 @@
+{
+  "brain_tumor": "v1",
+  "kidney": "v1",
+  "liver": "v1",
+  "heart": "v1",
+  "diabetes": "v1",
+  "breast_cancer": "v1",
+  "parkinsons": "v1"
+}

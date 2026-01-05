@@ -1,0 +1,13 @@
+# Development dependencies
+jupyterlab==4.0.9
+ipython==8.18.1
+pre-commit==3.5.0
+bandit==1.7.5
+safety==2.3.5
+locust==2.19.1
+
+# Additional tools
+seaborn==0.13.0
+matplotlib==3.8.2
+streamlit==1.29.0
+chainlit==1.0.0

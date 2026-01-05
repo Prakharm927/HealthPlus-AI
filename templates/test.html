@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEST - OpenHealth</title>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, sans-serif;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #007AFF;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>✅ SERVER WORKS!</h1>
+    <p>If you see this, the server is running correctly.</p>
+    <p>Time: <span id="time"></span></p>
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleTimeString();
+        console.log('TEST PAGE LOADED');
+    </script>
+</body>
+
+</html>

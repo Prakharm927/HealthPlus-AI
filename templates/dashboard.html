@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthPlus AI - Multi-Disease Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 122, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(175, 82, 222, 0.1) 0%, transparent 50%);
+            animation: gradientMove 20s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientMove {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-10%, -10%);
+            }
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: rgba(28, 28, 30, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 24px;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            background: #007AFF;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #34C759;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 64px 24px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        h1 {
+            font-size: clamp(48px, 8vw, 72px);
+            font-weight: 700;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #007AFF;
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: #0051D5;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 122, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 64px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 48px 0;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 0.5px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #007AFF;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer {
+            margin-top: 80px;
+            padding: 32px 24px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 32px 16px;
+            }
+
+            h1 {
+                font-size: 40px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <span>🏥</span> HealthPlus <span class="badge">AI</span>
+            </div>
+            <div style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500;">
+                <span class="status-dot"></span>Live
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>AI-Powered Health Screening</h1>
+            <p class="subtitle">Get instant risk assessments for multiple diseases using advanced machine learning</p>
+
+            <div class="cta-buttons">
+                <a href="/demo" class="btn-primary">🎯 Try Free Screening</a>
+                <a href="/docs" class="btn-secondary">📖 API Documentation</a>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-value">7</div>
+                <div class="stat-label">AI Models</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">95%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">&lt;2s</div>
+                <div class="stat-label">Response Time</div>
+            </div>
+        </div>
+
+        <div class="features">
+            <a href="/calculators/heart" style="text-decoration: none; color: inherit;">
+                <div class="feature-card">
+                    <span class="feature-icon">❤️</span>
+                    <h3>Heart Disease</h3>
+                    <p>Assess cardiovascular risk based on cholesterol, blood pressure, and other clinical markers</p>
+                </div>
+            </a>
+
+            <a href="/calculators/diabetes" style="text-decoration: none; color: inherit;">
+                <div class="feature-card">
+                    <span class="feature-icon">🩸</span>
+                    <h3>Diabetes</h3>
+                    <p>Evaluate diabetes probability using glucose levels, BMI, and age factors</p>
+                </div>
+            </a>
+
+            <a href="/calculators/brain-tumor" style="text-decoration: none; color: inherit;">
+                <div class="feature-card">
+                    <span class="feature-icon">🧠</span>
+                    <h3>Brain Tumor</h3>
+                    <p>Classify brain tumors from MRI scans (Glioma, Meningioma, Pituitary)</p>
+                </div>
+            </a>
+
+            <a href="/calculators/kidney" style="text-decoration: none; color: inherit;">
+                <div class="feature-card">
+                    <span class="feature-icon">🫁</span>
+                    <h3>Kidney Disease</h3>
+                    <p>Detect kidney conditions from CT scans (Cyst, Stone, Tumor)</p>
+                </div>
+            </a>
+
+            <a href="/calculators/liver" style="text-decoration: none; color: inherit;">
+                <div class="feature-card">
+                    <span class="feature-icon">🩺</span>
+                    <h3>Liver Disease</h3>
+                    <p>Screen for liver conditions using lab results and enzyme levels</p>
+                </div>
+            </a>
+
+            <a href="/calculators/breast-cancer" style="text-decoration: none; color: inherit;">
+                <div class="feature-card">
+                    <span class="feature-icon">🎗️</span>
+                    <h3>Breast Cancer</h3>
+                    <p>Classify breast tissue samples as benign or malignant</p>
+                </div>
+            </a>
+
+            <a href="/calculators/parkinsons" style="text-decoration: none; color: inherit;">
+                <div class="feature-card">
+                    <span class="feature-icon">🤝</span>
+                    <h3>Parkinson's</h3>
+                    <p>Detect Parkinson's disease from voice measurements</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">
+        HealthPlus AI v1.0.0 • Production-Grade Health Prediction Service<br>
+        <span style="font-size: 12px; margin-top: 8px; display: block;">
+            For demonstration purposes only. Not a substitute for professional medical advice.
+        </span>
+    </div>
+
+    <script>
+        console.log('%c🏥 HealthPlus AI', 'color: #007AFF; font-size: 20px; font-weight: bold;');
+        console.log('🎯 Try demo: /demo');
+        console.log('📖 API docs: /docs');
+    </script>
+</body>
+
+</html>
